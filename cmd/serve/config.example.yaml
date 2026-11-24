@@ -1,0 +1,16 @@
+# Example config for the arrivals service (cmd/serve).
+# Copy to config.yaml (gitignored) and fill in your values.
+
+# Paths to the GTFS static zip files (download them with: go run ./cmd/fetch)
+gtfs_subway: "gtfs_subway.zip"
+gtfs_supplemented: "gtfs_supplemented.zip"
+# The LIRR's static feed, for its station codes (ATL, JAM). Omit to turn the
+# LIRR off. Its realtime feed is polled on realtime_interval.
+gtfs_lirr: "gtfslirr.zip"
+
+# How often to re-fetch the realtime feeds (seconds)
+realtime_interval: 30
+
+# How often to re-fetch Citi Bike station status (seconds). Omit for 60, the
+# feed's own refresh rate; -1 turns bikes off.
+# bikes_interval: 60
