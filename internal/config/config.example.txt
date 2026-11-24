@@ -1,0 +1,91 @@
+# Example config for the on-device clock firmware.
+# Copy to config.txt (gitignored) and fill in your values. config.txt is
+# embedded into the firmware at build time (the device has no filesystem).
+#
+# Comments must sit on their own line, like these: the parser takes everything
+# after "key:" as the value, so a comment at the end of a key's line becomes
+# part of the value and breaks it.
+
+# --- WiFi (device only) ---
+ssid: YOUR_WIFI_SSID
+passphrase: YOUR_WIFI_PASSWORD
+
+# --- Display ---
+
+# Logical size (pixels) apps draw to (= panel size for a single panel).
+width: 64
+height: 32
+
+# Bits per color channel (1..8). Omit for the driver default.
+color_depth: 8
+
+# Global brightness 0..255. Omit for full.
+brightness: 255
+
+# Single-buffer (default); set true for tear-free double buffering at the cost
+# of a second buffer.
+double_buffer: false
+
+# Set true for a panel whose data lines are wired B-G-R (reds and blues come out
+# swapped otherwise). A per-panel trait; default RGB.
+# bgr: true
+
+# --- Arrivals service (the cmd/serve backend) ---
+
+# IP or hostname of the machine running cmd/serve, and its port.
+host: 192.168.1.50
+port: 8080
+
+# --- Stops ---
+# Space-separated stop IDs. Each stop may take an optional route filter after
+# ":", a comma-separated list of tokens:
+#   bare route (e.g. Q)  -> pin:  always shown, "No service" when not arriving
+#   !route     (e.g. !R) -> mute: never shown, even when arriving
+# With no tokens, every arriving route is shown. Examples:
+#   R30N         every route arriving at R30N
+#   R30N:Q       all arrivals, plus "No service" for Q when it's down
+#   R30N:Q,!R    always Q (No service if absent), hide R, show the rest
+# A stop may also take @minutes, the walk to that platform: R30N@4, or
+# R30N@4:Q,!R. The device keeps it (the server never sees it); the board layout
+# hides trains sooner than that and lights the one to leave for now. A platform
+# without one takes its station's other platform's.
+stops: R30N A41N A42N 233N
+
+# LIRR trips, each FROM>TO by LIRR station code, space-separated: the trains
+# leaving FROM that stop at TO. The board shows each like a station: FROM's
+# name on top, then one row with TO's name and the next departures. @minutes
+# is the walk to FROM, as for a stop.
+# lirr: ATL>JAM@9
+
+# Citi Bike stations, by short station number, space-separated. The docks app
+# (make docks) shows their open docks and bikes, a block per station in this
+# order; two fit a 128x64 panel at full size. (The clock asks for them too, but
+# no clock layout draws them yet.) Find numbers in Citi Bike's
+# station_information feed ("short_name"), at
+# https://gbfs.lyft.com/gbfs/2.3/bkn/en/station_information.json
+# These two are both ends of Willoughby St between Ashland Pl and Fleet St.
+# bikes: 4587.02 4628.05
+
+# Side-by-side arrival columns per page: the compact view. Omit (or 1) for one
+# full-width group per row; the clock drops columns that would leave a cell too
+# narrow to draw.
+# columns: 2
+
+# Layout: classic (two-line cells with a marquee), compact (one-line rows: route,
+# direction and ETAs), or board — one fixed screen for
+# a 128x64 panel, a row per route with both directions, no paging or animation.
+# layout: board
+
+# --- Timing ---
+
+# How often to fetch arrivals.
+poll_interval: 30s
+
+# Time per arrival-group page.
+group_interval: 9s
+
+# How far ahead to ask for arrivals (1m..180m). Omit to let the server pick (1h).
+# This, not the display width, is what usually bounds a row's ETA count: an hour
+# of real headways holds only three or four trains per route. Raising it past the
+# depth the MTA feed publishes (~80m) adds nothing.
+# horizon: 90m
