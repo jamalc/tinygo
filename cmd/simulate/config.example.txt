@@ -1,0 +1,9 @@
+# Config for the host simulator (go run ./cmd/simulate). Copy to config.txt
+# (gitignored).
+#
+# An overlay on the embedded device config (internal/config/config.txt): any
+# key from that file set here overrides it, anything omitted is inherited.
+# Usually the only delta is pointing host at the local backend.
+
+host: localhost
+port: 8080
