@@ -1,5 +1,5 @@
 // Command simulate is a desktop application to simulate the clock display and
-// test the clock, conway, stress, bloom, marble, and breakout apps.
+// test the clock, docks, conway, stress, bloom, marble, and breakout apps.
 //
 // It uses the Ebiten game library to create a window and render the display
 // output from those packages. It also captures the arrow keys, standing in for
@@ -9,7 +9,7 @@
 //
 // Usage:
 //
-//	go run ./cmd/simulate [-config path/to/config.txt] (clock|conway|stress|bloom|marble|breakout)
+//	go run ./cmd/simulate [-config path/to/config.txt] (clock|docks|conway|stress|bloom|marble|breakout)
 package main
 
 import (
@@ -25,6 +25,7 @@ import (
 	"github.com/jamalc/tinygo/internal/clock"
 	"github.com/jamalc/tinygo/internal/config"
 	"github.com/jamalc/tinygo/internal/conway"
+	"github.com/jamalc/tinygo/internal/docks"
 	"github.com/jamalc/tinygo/internal/marble"
 	"github.com/jamalc/tinygo/internal/simulator"
 	"github.com/jamalc/tinygo/internal/stress"
@@ -36,7 +37,7 @@ var (
 
 // apps are the display apps the simulator can run, and the values accepted as
 // its positional argument.
-var apps = []string{"clock", "conway", "stress", "bloom", "marble", "breakout"}
+var apps = []string{"clock", "docks", "conway", "stress", "bloom", "marble", "breakout"}
 
 // inputCapturer is anything that reads Ebiten input once per Update tick.
 type inputCapturer interface {
@@ -136,6 +137,9 @@ func main() {
 		g.input = kb
 		g.title = "Subway Clock"
 		go clock.Run(cfg, display, kb)
+	case "docks":
+		g.title = "Citi Bike Docks"
+		go docks.Run(cfg, display)
 	case "conway":
 		g.title = "Conway's Game of Life"
 		go conway.Run(cfg, display)
